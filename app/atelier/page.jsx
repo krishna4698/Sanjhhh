@@ -136,7 +136,7 @@ export default function AtelierPage() {
               allowFullScreen
             />
           </div>
-          <div className="atelier-video-badge">Jaipur-born. India-wide.</div>
+         
         </div>
       </section>
 
