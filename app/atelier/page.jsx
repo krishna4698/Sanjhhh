@@ -120,8 +120,17 @@ export default function AtelierPage() {
           </div>
         </div>
 
-        <div className="about-image">
-          <img src="/images/portfolio-ornate-night.png" alt="Atelier Work" />
+        <div className="about-image about-video">
+          <div className="about-video-frame">
+            <iframe
+              loading="lazy"
+              title="Gumlet video player"
+              src="https://play.gumlet.io/embed/6a0314045ad2dae94efb9b56?background=true&autoplay=true&loop=true&disable_player_controls=true"
+              referrerPolicy="origin"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+              allowFullScreen
+            />
+          </div>
         </div>
       </section>
 
