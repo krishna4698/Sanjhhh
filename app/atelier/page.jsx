@@ -16,21 +16,28 @@ export default function AtelierPage() {
 
     const cleanupMobileNav = setupMobileNav(nav);
     const animationFrames = [];
+    const timers = [];
+    let isActive = true;
 
     function updateNav() {
       nav.classList.toggle("scrolled", window.scrollY > 80);
     }
 
-    function animateStat(element, target, suffix, duration) {
+    function animateStat(element, target, suffix, duration, onComplete) {
       const start = performance.now();
 
       function tick(now) {
+        if (!isActive) return;
+
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
         element.textContent = `${Math.round(target * eased)}${suffix}`;
 
         if (progress < 1) {
           animationFrames.push(requestAnimationFrame(tick));
+        } else {
+          element.textContent = `${target}${suffix}`;
+          onComplete?.();
         }
       }
 
@@ -40,15 +47,31 @@ export default function AtelierPage() {
 
     stats.forEach(({ selector, target, suffix }, index) => {
       const element = document.querySelector(`[data-count="${selector}"]`);
-      if (element) animateStat(element, target, suffix, 900 + index * 120);
+      if (!element) return;
+
+      if (selector === "weddings") {
+        const loopWeddingCounter = () => {
+          animateStat(element, target, suffix, 900, () => {
+            if (!isActive) return;
+            timers.push(window.setTimeout(loopWeddingCounter, 3000));
+          });
+        };
+
+        loopWeddingCounter();
+        return;
+      }
+
+      animateStat(element, target, suffix, 900 + index * 120);
     });
 
     window.addEventListener("scroll", updateNav, { passive: true });
     updateNav();
 
     return () => {
+      isActive = false;
       cleanupMobileNav();
       animationFrames.forEach((frame) => cancelAnimationFrame(frame));
+      timers.forEach((timer) => window.clearTimeout(timer));
       window.removeEventListener("scroll", updateNav);
     };
   }, []);
