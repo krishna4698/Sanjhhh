@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAANJH — Bespoke Wedding Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#c9a366;
+  --gold-soft:#e2c98a;
+  --cream:#f4ead5;
+  --deep:#0a0807;
+  --deep-2:#1a1410;
+  --rose:#a35569;
+  --ink:#2a2018;
+}
+html { scroll-behavior:smooth; }
+body {
+  background:var(--deep);
+  color:var(--cream);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+  line-height:1.5;
+}
+
+/* ===== NAVIGATION ===== */
+.nav {
+  position:fixed; top:0; left:0; right:0;
+  z-index:300;
+  padding:1.6rem 3rem;
+  display:flex; justify-content:space-between; align-items:center;
+  background:linear-gradient(180deg, rgba(10,8,7,0.7), transparent);
+  transition:background 0.3s ease, padding 0.3s ease;
+}
+.nav.scrolled {
+  background:rgba(10,8,7,0.95);
+  padding:1rem 3rem;
+  backdrop-filter:blur(10px);
+}
+.brand {
+  font-family:'Cinzel',serif;
+  font-size:1.1rem; letter-spacing:0.55em;
+  color:var(--cream); font-weight:500;
+}
+.brand .dot { color:var(--gold); }
+.nav-links {
+  display:flex; gap:2.5rem; list-style:none;
+}
+.nav-links a {
+  color:var(--cream);
+  text-decoration:none;
+  font-size:0.7rem; letter-spacing:0.3em;
+  text-transform:uppercase;
+  opacity:0.8;
+  transition:opacity 0.3s, color 0.3s;
+}
+.nav-links a:hover { color:var(--gold); opacity:1; }
+@media (max-width:768px) { .nav-links { display:none; } .nav { padding:1.4rem 1.5rem; } }
+
+/* ===== PROGRESS BAR ===== */
+.progress {
+  position:fixed; top:0; left:0; height:2px;
+  background:var(--gold); width:0%; z-index:400;
+  transition:width 0.05s linear;
+}
+
+/* ===== HERO SCROLL-ZOOM SECTION ===== */
+.hero-wrap { height:700vh; position:relative; }
+.hero {
+  position:sticky; top:0; height:100vh;
+  overflow:hidden; background:var(--deep);
+}
+.lyr {
+  position:absolute; top:50%; left:50%;
+  width:100vw; height:100vh;
+  transform:translate(-50%,-50%) scale(1);
+  will-change:transform, opacity;
+  overflow:hidden;
+  --focus-x:center;
+  --focus-y:center;
+}
+.lyr img {
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position:var(--focus-x) var(--focus-y);
+  transform-origin:center center;
+  display:block;
+}
+
+/* Brand mark on top of hero */
+.hero-mark {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  z-index:80; text-align:center;
+  pointer-events:none;
+}
+.hero-mark .eyebrow {
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.7em;
+  color:var(--gold-soft); margin-bottom:1.2rem;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+}
+.hero-mark h1 {
+  font-family:'Cinzel',serif;
+  font-size:clamp(2.8rem, 7vw, 5.5rem);
+  font-weight:500; letter-spacing:0.25em;
+  color:var(--cream);
+  text-shadow:0 4px 40px rgba(0,0,0,0.9);
+  margin-bottom:1rem;
+}
+.hero-mark .tagline {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic; font-size:1.3rem;
+  color:var(--cream); opacity:0.95;
+  letter-spacing:0.05em;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+}
+.hero-mark .ornament {
+  display:flex; align-items:center; justify-content:center;
+  gap:1rem; margin:1.5rem auto;
+}
+.hero-mark .ornament span {
+  width:50px; height:1px; background:var(--gold);
+}
+.hero-mark .ornament svg { width:14px; height:14px; fill:var(--gold); }
+
+/* Captions for each zoom stage */
+.cap {
+  position:absolute; bottom:14vh;
+  left:50%; transform:translateX(-50%);
+  z-index:70; pointer-events:none;
+  text-align:center; opacity:0;
+  width:min(700px, 88vw);
+}
+.cap .num {
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.6em;
+  color:var(--gold-soft); margin-bottom:0.9rem;
+}
+.cap h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;
+  font-size:clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height:1.2; margin-bottom:0.6rem;
+  text-shadow:0 2px 30px rgba(0,0,0,0.85);
+}
+.cap h2 em { font-style:italic; color:var(--gold-soft); }
+.cap p {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:1.05rem; opacity:0.9;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+}
+
+/* Cinematic darkening + grain */
+.vignette {
+  position:absolute; inset:0; z-index:55; pointer-events:none;
+  background:
+    radial-gradient(ellipse 100% 80% at center, transparent 30%, rgba(0,0,0,0.7) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 25%, transparent 70%, rgba(0,0,0,0.5) 100%);
+}
+.grain {
+  position:absolute; inset:0; z-index:60; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.4; mix-blend-mode:overlay;
+}
+
+.scroll-cue {
+  position:absolute; bottom:3vh; left:50%; transform:translateX(-50%);
+  z-index:80;
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.55em;
+  color:var(--gold-soft); opacity:0.7; text-align:center;
+}
+.scroll-cue::after {
+  content:''; display:block; width:1px; height:48px;
+  background:linear-gradient(var(--gold-soft), transparent);
+  margin:0.8rem auto 0;
+  animation:drip 2s infinite ease-in-out;
+}
+@keyframes drip { 0%,100%{opacity:.25} 50%{opacity:.9} }
+
+/* ===== GALLERY SCROLL SECTION ===== */
+.gallery-wrap { height:700vh; position:relative; background:var(--deep); }
+.gallery-pin {
+  position:sticky; top:0; height:100vh;
+  overflow:hidden; background:var(--deep);
+}
+.gal-slide {
+  position:absolute; inset:0;
+  opacity:0;
+  transition:opacity 0.8s ease;
+  will-change:opacity;
+}
+.gal-slide img {
+  width:100%; height:100%;
+  object-fit:cover;
+}
+.gal-slide::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.85) 100%);
+}
+.gal-slide.active { opacity:1; }
+
+.gal-meta {
+  position:absolute; bottom:9vh; left:6vw;
+  z-index:10;
+  max-width:580px;
+  opacity:0; transform:translateY(30px);
+  transition:opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+.gal-slide.active .gal-meta { opacity:1; transform:translateY(0); }
+.gal-meta .num {
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.55em;
+  color:var(--gold-soft); margin-bottom:1rem;
+}
+.gal-meta h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight:300; line-height:1.1;
+  color:var(--cream);
+  margin-bottom:0.6rem;
+  text-shadow:0 2px 30px rgba(0,0,0,0.85);
+}
+.gal-meta h3 em { font-style:italic; color:var(--gold-soft); }
+.gal-meta p {
+  font-family:'Inter',sans-serif;
+  font-size:0.85rem; letter-spacing:0.04em;
+  color:var(--cream); opacity:0.85; line-height:1.6;
+  text-shadow:0 2px 20px rgba(0,0,0,0.7);
+}
+.gal-meta .tag {
+  display:inline-block;
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.45em;
+  border:1px solid var(--gold);
+  padding:0.5rem 1.2rem;
+  color:var(--gold-soft);
+  margin-top:1.4rem;
+}
+
+/* Gallery progress dots */
+.gal-dots {
+  position:absolute; right:3vw; top:50%;
+  transform:translateY(-50%);
+  z-index:20;
+  display:flex; flex-direction:column;
+  gap:0.85rem;
+}
+.gal-dots span {
+  width:2px; height:32px; background:rgba(255,255,255,0.25);
+  display:block; transition:background 0.4s, height 0.4s;
+}
+.gal-dots span.on {
+  background:var(--gold);
+  height:48px;
+}
+.gal-counter {
+  position:absolute; top:14vh; left:6vw;
+  z-index:20;
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.5em;
+  color:var(--gold-soft); opacity:0.85;
+}
+.gal-counter strong { font-size:1.2rem; color:var(--cream); margin-right:0.4rem; }
+
+@media (max-width:768px) {
+  .gal-meta { left:5vw; right:5vw; }
+  .gal-dots { right:5vw; }
+}
+
+/* ===== ABOUT STRIP ===== */
+.about {
+  padding:8rem 3rem;
+  background:var(--deep-2);
+  display:grid; grid-template-columns:1fr 1fr; gap:5rem;
+  align-items:center;
+}
+.about .eyebrow {
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.55em;
+  color:var(--gold); margin-bottom:1.2rem;
+}
+.about h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem, 4.5vw, 3.5rem);
+  font-weight:300; line-height:1.15;
+  margin-bottom:1.6rem;
+}
+.about h2 em { font-style:italic; color:var(--gold-soft); }
+.about p {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem; line-height:1.7;
+  opacity:0.85; margin-bottom:1rem;
+}
+.stats {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2rem; padding-top:2rem;
+  border-top:1px solid rgba(201,163,102,0.2);
+  margin-top:2rem;
+}
+.stat .n {
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.5rem; color:var(--gold-soft);
+  font-weight:300; line-height:1;
+}
+.stat .l {
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.4em;
+  opacity:0.7; margin-top:0.4rem;
+  text-transform:uppercase;
+}
+.about-image {
+  aspect-ratio:4/5; overflow:hidden;
+  border-radius:2px;
+  position:relative;
+}
+.about-image img { width:100%; height:100%; object-fit:cover; }
+.about-image::after {
+  content:''; position:absolute; inset:0;
+  border:1px solid var(--gold); margin:1rem;
+  pointer-events:none;
+}
+@media (max-width:768px) {
+  .about { grid-template-columns:1fr; padding:5rem 1.5rem; gap:3rem; }
+  .stats { gap:1rem; }
+}
+
+/* ===== SERVICES STRIP ===== */
+.services {
+  padding:7rem 3rem;
+  background:var(--deep);
+  text-align:center;
+}
+.services .eyebrow {
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.55em;
+  color:var(--gold); margin-bottom:1rem;
+}
+.services > h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem, 4.5vw, 3.5rem);
+  font-weight:300; margin-bottom:0.5rem;
+}
+.services > h2 em { font-style:italic; color:var(--gold-soft); }
+.services > p {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic; opacity:0.7;
+  margin-bottom:4rem;
+}
+.svc-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:1.5rem;
+  max-width:1300px; margin:0 auto;
+}
+.svc {
+  padding:2.5rem 1.8rem;
+  border:1px solid rgba(201,163,102,0.18);
+  text-align:left;
+  transition:border-color 0.4s, transform 0.4s;
+}
+.svc:hover {
+  border-color:var(--gold);
+  transform:translateY(-4px);
+}
+.svc .icon {
+  width:40px; height:40px;
+  margin-bottom:1.5rem; color:var(--gold);
+}
+.svc h4 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem; font-weight:400;
+  margin-bottom:0.6rem;
+}
+.svc p {
+  font-family:'Inter',sans-serif;
+  font-size:0.85rem; line-height:1.7;
+  opacity:0.75;
+}
+
+/* ===== CONTACT ===== */
+.contact {
+  padding:8rem 3rem;
+  background:linear-gradient(180deg, var(--deep), var(--deep-2));
+  position:relative;
+}
+.contact-inner {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1.2fr;
+  gap:5rem; align-items:start;
+}
+.contact-info .eyebrow {
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.55em;
+  color:var(--gold); margin-bottom:1.2rem;
+}
+.contact-info h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem, 4.5vw, 3.5rem);
+  font-weight:300; line-height:1.1;
+  margin-bottom:1.4rem;
+}
+.contact-info h2 em { font-style:italic; color:var(--gold-soft); }
+.contact-info > p {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem; line-height:1.7;
+  opacity:0.85; margin-bottom:2.5rem;
+}
+.contact-detail {
+  margin-bottom:1.5rem;
+  display:flex; gap:1rem; align-items:flex-start;
+}
+.contact-detail .ic {
+  width:30px; height:30px; flex-shrink:0;
+  border:1px solid var(--gold); color:var(--gold);
+  display:grid; place-items:center;
+  font-size:0.7rem;
+}
+.contact-detail .ttl {
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.4em;
+  color:var(--gold-soft); opacity:0.85;
+  margin-bottom:0.25rem; text-transform:uppercase;
+}
+.contact-detail .val {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem; color:var(--cream);
+}
+
+/* Form */
+.contact-form {
+  padding:2.5rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(201,163,102,0.2);
+}
+.field { margin-bottom:1.4rem; }
+.field label {
+  display:block;
+  font-family:'Cinzel',serif;
+  font-size:0.55rem; letter-spacing:0.4em;
+  color:var(--gold-soft); margin-bottom:0.5rem;
+  text-transform:uppercase;
+}
+.field input, .field select, .field textarea {
+  width:100%;
+  padding:0.85rem 1rem;
+  background:transparent;
+  border:1px solid rgba(201,163,102,0.3);
+  color:var(--cream);
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;
+  outline:none;
+  transition:border-color 0.3s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color:var(--gold);
+}
+.field textarea { resize:vertical; min-height:110px; }
+.field select option { background:var(--deep-2); color:var(--cream); }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+.submit-btn {
+  width:100%;
+  padding:1.1rem;
+  background:var(--gold);
+  color:var(--deep);
+  border:none;
+  font-family:'Cinzel',serif;
+  font-size:0.75rem; letter-spacing:0.45em;
+  text-transform:uppercase;
+  font-weight:500;
+  cursor:pointer;
+  transition:background 0.3s;
+}
+.submit-btn:hover { background:var(--gold-soft); }
+
+@media (max-width:768px) {
+  .contact { padding:5rem 1.5rem; }
+  .contact-inner { grid-template-columns:1fr; gap:3rem; }
+  .row2 { grid-template-columns:1fr; }
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  padding:3rem; text-align:center;
+  background:var(--deep-2);
+  border-top:1px solid rgba(201,163,102,0.15);
+}
+.footer .brand { display:inline-block; margin-bottom:1rem; }
+.footer p {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic; font-size:0.9rem;
+  opacity:0.6;
+}
+.socials { margin-top:1.5rem; display:flex; justify-content:center; gap:1.5rem; }
+.socials a {
+  color:var(--gold-soft);
+  font-family:'Cinzel',serif;
+  font-size:0.6rem; letter-spacing:0.4em;
+  text-decoration:none;
+  opacity:0.85;
+  transition:opacity 0.3s;
+}
+.socials a:hover { opacity:1; color:var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="brand">SAANJH<span class="dot">·</span></div>
+  <ul class="nav-links">
+    <li><a href="#gallery">PORTFOLIO</a></li>
+    <li><a href="#about">ATELIER</a></li>
+    <li><a href="#services">SERVICES</a></li>
+    <li><a href="#contact">ENQUIRE</a></li>
+  </ul>
+</nav>
+
+<!-- =================== HERO ZOOM SECTION =================== -->
+<div class="hero-wrap" id="heroWrap">
+  <section class="hero">
+
+    <!-- LAYER 1: Rose-lit garden mandap -->
+    <div class="lyr" id="L1" style="--focus-y:46%">
+      <img src="images/hero-zoom-golden-gazebo.jpg" alt="Rose-lit garden mandap with chandelier and floral aisle">
+    </div>
+
+    <!-- LAYER 2: Ornate floral aisle -->
+    <div class="lyr" id="L2" style="opacity:0; --focus-y:48%">
+      <img src="images/hero-zoom-ornate-aisle.jpg" alt="Ornate floral wedding aisle with reflective black water">
+    </div>
+
+    <!-- LAYER 3: Coastal pastel ceremony -->
+    <div class="lyr" id="L3" style="opacity:0; --focus-y:45%">
+      <img src="images/hero-zoom-coastal-pastel.jpg" alt="Pastel coastal wedding mandap by the sea">
+    </div>
+
+    <!-- LAYER 4: Red rose canopy -->
+    <div class="lyr" id="L4" style="opacity:0; --focus-y:43%">
+      <img src="images/hero-zoom-rose-canopy.jpg" alt="Red rose canopy mandap with floral pillars">
+    </div>
+
+    <!-- LAYER 5: Heart arch stage -->
+    <div class="lyr" id="L5" style="opacity:0; --focus-y:47%">
+      <img src="images/hero-zoom-heart-arch.jpg" alt="Heart-shaped floral wedding stage in a garden">
+    </div>
+
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <!-- BRAND MARK (visible at start) -->
+    <div class="hero-mark" id="heroMark">
+      <p class="eyebrow">EST. 2014 · BESPOKE WEDDING ATELIER</p>
+      <h1>SAANJH</h1>
+      <div class="ornament">
+        <span></span>
+        <svg viewBox="0 0 24 24"><path d="M12 2L14 10 22 12 14 14 12 22 10 14 2 12 10 10z"/></svg>
+        <span></span>
+      </div>
+      <p class="tagline">Where every wedding becomes a story.</p>
+    </div>
+
+    <!-- CAPTIONS for zoom stages -->
+    <div class="cap" id="c1">
+      <p class="num">01 &middot; SIGNATURE</p>
+      <h2>Rose-Lit Garden <em>Mandap</em></h2>
+      <p>A glowing pavilion framed by petals, lanterns, and gold</p>
+    </div>
+    <div class="cap" id="c2">
+      <p class="num">02 &middot; ORNATE AISLE</p>
+      <h2>A <em>Palace</em> of Florals</h2>
+      <p>Reflective aisles and sculptural blooms for a grand entrance</p>
+    </div>
+    <div class="cap" id="c3">
+      <p class="num">03 &middot; COASTAL PASTEL</p>
+      <h2>Pastels by the <em>Sea</em></h2>
+      <p>Soft arches, sea air, and ceremony light</p>
+    </div>
+    <div class="cap" id="c4">
+      <p class="num">04 &middot; ROSE CANOPY</p>
+      <h2>Crimson <em>Canopies</em>, Ivory Pillars</h2>
+      <p>A flower-dense mandap built for vows beneath the sun</p>
+    </div>
+    <div class="cap" id="c5">
+      <p class="num">05 &middot; HEART ARCH</p>
+      <h2>Twin Arches, <em>One Promise</em></h2>
+      <p>A contemporary floral stage shaped around the couple</p>
+    </div>
+
+    <div class="scroll-cue" id="scrollCue">SCROLL TO EXPLORE</div>
+  </section>
+</div>
+
+<!-- =================== PORTFOLIO GALLERY =================== -->
+<div class="gallery-wrap" id="gallery">
+  <div class="gallery-pin">
+
+    <div class="gal-counter">
+      <strong id="gNum">01</strong> / <span id="gTotal">07</span> · PORTFOLIO
+    </div>
+
+    <div class="gal-dots" id="galDots">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+
+    <!-- SLIDE 1 -->
+    <div class="gal-slide active">
+      <img src="images/hero-pampas.jpg" alt="Pampas Beach">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 001</p>
+        <h3>The <em>Pampas</em> Pavilion</h3>
+        <p>A coastal ceremony framed by hand-tied pampas grass and blush florals. Goa, 2024.</p>
+        <span class="tag">BEACH WEDDING</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="gal-slide">
+      <img src="images/hero-golden.jpg" alt="Golden Pavilion">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 002</p>
+        <h3>The <em>Golden</em> Gazebo</h3>
+        <p>A garden mandap dripping in crystal chandeliers, rose carpeting, and lantern light. Udaipur, 2024.</p>
+        <span class="tag">GARDEN WEDDING</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="gal-slide">
+      <img src="images/hero-ornate.jpg" alt="Ornate Mandap">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 003</p>
+        <h3>The <em>Royal</em> Architecture</h3>
+        <p>Six gilded mandap pillars crowned with floral fountains. A reflective floor doubled the drama. Jaipur, 2023.</p>
+        <span class="tag">PALACE WEDDING</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="gal-slide">
+      <img src="images/hero-peacock.jpg" alt="Peacock Mandap">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 004</p>
+        <h3>The <em>Peacock</em> Procession</h3>
+        <p>A coastal mandap with peacock motifs, tea-rose canopy, and a turquoise guest aisle. Mumbai, 2024.</p>
+        <span class="tag">COASTAL WEDDING</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="gal-slide">
+      <img src="images/hero-rose.jpg" alt="Rose Dome">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 005</p>
+        <h3>A Thousand <em>Roses</em></h3>
+        <p>Crimson roses domed over white blossom pillars, with gold tassel curtains. Delhi, 2023.</p>
+        <span class="tag">SIGNATURE FLORAL</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="gal-slide">
+      <img src="images/gal-heart.jpg" alt="Heart Arch">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 006</p>
+        <h3>The <em>Infinity</em> Arch</h3>
+        <p>Twin floral loops in lavender and ivory — symbolic, photogenic, unforgettable. Chandigarh, 2024.</p>
+        <span class="tag">CONTEMPORARY</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 -->
+    <div class="gal-slide">
+      <img src="images/gal-pink-ocean.jpg" alt="Pink Ocean">
+      <div class="gal-meta">
+        <p class="num">PROJECT · 007</p>
+        <h3>The <em>Skyline</em> Stage</h3>
+        <p>An open-sky pavilion with a cascading floral ceiling and sea-view altar. Mumbai, 2025.</p>
+        <span class="tag">ROOFTOP WEDDING</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =================== ABOUT =================== -->
+<section class="about" id="about">
+  <div>
+    <p class="eyebrow">THE ATELIER</p>
+    <h2>A decade of <em>crafted</em><br>celebrations.</h2>
+    <p>SAANJH is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns — every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
+    <p>From beachside ceremonies in Goa to royal weddings in Rajasthan, we have designed over 200 weddings for couples who believe their day should feel like nothing they have ever seen before.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">200+</div><div class="l">Weddings Designed</div></div>
+      <div class="stat"><div class="n">12</div><div class="l">Cities Served</div></div>
+      <div class="stat"><div class="n">10yr</div><div class="l">Atelier Legacy</div></div>
+    </div>
+  </div>
+  <div class="about-image">
+    <img src="images/hero-ornate.jpg" alt="Atelier Work">
+  </div>
+</section>
+
+<!-- =================== SERVICES =================== -->
+<section class="services" id="services">
+  <p class="eyebrow">OUR CRAFT</p>
+  <h2>What We <em>Curate</em></h2>
+  <p>Bespoke design across every moment of your celebration</p>
+
+  <div class="svc-grid">
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>
+      </svg>
+      <h4>Mandap & Stage Design</h4>
+      <p>Custom-built floral structures, from beach pavilions to palace-scale mandaps.</p>
+    </div>
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="12" cy="9" r="6"/><path d="M12 15v6M9 21h6"/>
+      </svg>
+      <h4>Floral Architecture</h4>
+      <p>Heirloom florals, hand-tied installations, scented walkways and aisle design.</p>
+    </div>
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/>
+      </svg>
+      <h4>Lighting & Ambience</h4>
+      <p>Chandeliers, lanterns, fairy canopies and curated lighting design from dusk to dawn.</p>
+    </div>
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M3 7h18M3 12h18M3 17h18"/>
+      </svg>
+      <h4>Reception Styling</h4>
+      <p>Table-scapes, centerpieces, lounge design and the unforgettable details.</p>
+    </div>
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="3" y="6" width="18" height="14" rx="1"/><path d="M3 10h18M8 6V4M16 6V4"/>
+      </svg>
+      <h4>Full Event Planning</h4>
+      <p>End-to-end planning across multi-day Indian weddings, with logistics handled.</p>
+    </div>
+    <div class="svc">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+      </svg>
+      <h4>Destination Weddings</h4>
+      <p>Anywhere in India. Goa, Udaipur, Jaipur, Kerala — we travel with our atelier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =================== CONTACT =================== -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+
+    <div class="contact-info">
+      <p class="eyebrow">ENQUIRE</p>
+      <h2>Begin your <em>SAANJH</em> story.</h2>
+      <p>Tell us about your wedding. We respond personally within 24 hours, and we'd love to design a celebration that's entirely yours.</p>
+
+      <div class="contact-detail">
+        <div class="ic">✉</div>
+        <div>
+          <div class="ttl">Email</div>
+          <div class="val">hello@saanjh.in</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="ic">☎</div>
+        <div>
+          <div class="ttl">Phone / WhatsApp</div>
+          <div class="val">+91 98720 43542</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="ic">⌂</div>
+        <div>
+          <div class="ttl">Atelier</div>
+          <div class="val">C-Scheme, Jaipur, Rajasthan 302001</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="ic">◐</div>
+        <div>
+          <div class="ttl">Studio Hours</div>
+          <div class="val">By appointment, Mon — Sat</div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="event.preventDefault(); this.querySelector('.submit-btn').textContent='THANK YOU — WE\\'LL BE IN TOUCH';">
+      <div class="row2">
+        <div class="field">
+          <label>FULL NAME</label>
+          <input type="text" required placeholder="Your name">
+        </div>
+        <div class="field">
+          <label>PARTNER NAME</label>
+          <input type="text" placeholder="Optional">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>EMAIL</label>
+          <input type="email" required placeholder="your@email.com">
+        </div>
+        <div class="field">
+          <label>PHONE</label>
+          <input type="tel" placeholder="+91 ...">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>WEDDING DATE</label>
+          <input type="date">
+        </div>
+        <div class="field">
+          <label>EVENT TYPE</label>
+          <select>
+            <option>Wedding Ceremony</option>
+            <option>Sangeet / Mehndi</option>
+            <option>Reception</option>
+            <option>Full Multi-Day Wedding</option>
+            <option>Destination Wedding</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>VENUE / CITY</label>
+          <input type="text" placeholder="Jaipur, Goa, etc.">
+        </div>
+        <div class="field">
+          <label>GUEST COUNT</label>
+          <select>
+            <option>Under 100</option>
+            <option>100 — 300</option>
+            <option>300 — 600</option>
+            <option>600 — 1000</option>
+            <option>1000+</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>TELL US YOUR VISION</label>
+        <textarea placeholder="Theme, colors, references, or anything special..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn">SEND ENQUIRY</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="brand">SAANJH<span class="dot">·</span></div>
+  <p>Bespoke Wedding Atelier · Jaipur · Estd. 2014</p>
+  <div class="socials">
+    <a href="https://instagram.com">INSTAGRAM</a>
+    <!-- <a href="#">PINTEREST</a> -->
+    <a href="#">YOUTUBE</a>
+  </div>
+</footer>
+
+<script>
+/* ===================== HERO ZOOM ===================== */
+const heroWrap   = document.getElementById('heroWrap');
+const heroMark   = document.getElementById('heroMark');
+const progress   = document.getElementById('progress');
+const scrollCue  = document.getElementById('scrollCue');
+const nav        = document.getElementById('nav');
+
+const layers = [1,2,3,4,5].map(i => document.getElementById('L'+i));
+const caps   = [1,2,3,4,5].map(i => document.getElementById('c'+i));
+
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const remap = (v,i0,i1,o0,o1)=>o0+clamp((v-i0)/(i1-i0),0,1)*(o1-o0);
+const fade  = (p,fi0,fi1,fo0,fo1)=>Math.min(remap(p,fi0,fi1,0,1),remap(p,fo0,fo1,1,0));
+
+// Scroll windows for each layer: [start, end, maxScale]
+const segs = [
+  [0.00, 0.22, 6 ],
+  [0.18, 0.42, 6 ],
+  [0.38, 0.62, 6 ],
+  [0.58, 0.82, 6 ],
+  [0.78, 1.00, 3 ],
+];
+
+function updateHero() {
+  const rect  = heroWrap.getBoundingClientRect();
+  const total = heroWrap.offsetHeight - window.innerHeight;
+  if (total <= 0) return;
+  const p     = clamp(-rect.top / total, 0, 1);
+
+  progress.style.width = (p*100) + '%';
+
+  // Brand mark fades out after start
+  heroMark.style.opacity = remap(p, 0, 0.04, 1, 0);
+  scrollCue.style.opacity = remap(p, 0, 0.04, 0.7, 0);
+
+  // Animate layers
+  layers.forEach((lyr, i) => {
+    const [s0, s1, maxS] = segs[i];
+    const localP = clamp((p - s0) / (s1 - s0), 0, 1);
+    const scale = Math.pow(maxS, localP);
+    const img = lyr.querySelector('img');
+    if (img) img.style.transform = `scale(${scale.toFixed(3)})`;
+
+    let op;
+    if (i === 0) op = remap(p, s1 - 0.04, s1, 1, 0);
+    else if (i === layers.length - 1) op = remap(p, s0, s0 + 0.06, 0, 1);
+    else op = fade(p, s0, s0 + 0.05, s1 - 0.04, s1);
+    lyr.style.opacity = op;
+  });
+
+  // Captions
+  caps[0].style.opacity = fade(p, 0.04, 0.08, 0.16, 0.20);
+  caps[1].style.opacity = fade(p, 0.22, 0.27, 0.36, 0.40);
+  caps[2].style.opacity = fade(p, 0.42, 0.47, 0.56, 0.60);
+  caps[3].style.opacity = fade(p, 0.62, 0.67, 0.76, 0.80);
+  caps[4].style.opacity = remap(p, 0.82, 0.90, 0, 1);
+}
+
+/* ===================== GALLERY SCROLL ===================== */
+const galleryWrap = document.getElementById('gallery');
+const galSlides   = document.querySelectorAll('.gal-slide');
+const galDots     = document.querySelectorAll('#galDots span');
+const gNum        = document.getElementById('gNum');
+const gTotal      = document.getElementById('gTotal');
+const totalSlides = galSlides.length;
+gTotal.textContent = String(totalSlides).padStart(2, '0');
+
+function updateGallery() {
+  const rect  = galleryWrap.getBoundingClientRect();
+  const total = galleryWrap.offsetHeight - window.innerHeight;
+  if (total <= 0) return;
+  const p     = clamp(-rect.top / total, 0, 1);
+
+  // Determine active slide index
+  const idx = clamp(Math.floor(p * totalSlides), 0, totalSlides - 1);
+
+  galSlides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  galDots.forEach((d, i) => d.classList.toggle('on', i === idx));
+  gNum.textContent = String(idx + 1).padStart(2, '0');
+}
+
+/* ===================== NAV BG ===================== */
+function updateNav() {
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+}
+
+/* ===================== UNIFIED SCROLL ===================== */
+function onScroll() {
+  updateHero();
+  updateGallery();
+  updateNav();
+}
+window.addEventListener('scroll', onScroll, { passive:true });
+window.addEventListener('resize', onScroll);
+onScroll();
+</script>
+</body>
+</html>
