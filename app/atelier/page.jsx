@@ -6,7 +6,7 @@ import { setupMobileNav } from "../mobileNav";
 const stats = [
   { selector: "weddings", target: 450, suffix: "+", label: "Weddings Designed" },
   { selector: "cities", target: 12, suffix: "", label: "Cities Served" },
-  { selector: "legacy", target: 10, suffix: "yr", label: "Atelier Legacy" },
+  { selector: "legacy", target: 15, suffix: "yr", label: "Atelier Legacy" },
 ];
 
 export default function AtelierPage() {
@@ -103,12 +103,17 @@ export default function AtelierPage() {
         </ul>
       </nav>
 
-      <section className="about" id="about">
-        <div>
+      <section className="about atelier-about" id="about">
+        <div className="atelier-copy">
           <p className="eyebrow">THE ATELIER</p>
           <h2>A decade of <em>crafted</em><br />celebrations.</h2>
-          <p>SAANJH is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns — every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
+          <p>SAANJH is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns - every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
           <p>From beachside ceremonies in Goa to royal weddings in Rajasthan, we have designed over 450 weddings for couples who believe their day should feel like nothing they have ever seen before.</p>
+
+          <div className="atelier-mobile-actions" aria-label="Atelier actions">
+            <a className="atelier-action primary" href="/#gallery">View Work</a>
+            <a className="atelier-action secondary" href="/enquire">Enquire</a>
+          </div>
 
           <div className="stats">
             {stats.map(({ selector, target, suffix, label }) => (
@@ -131,12 +136,13 @@ export default function AtelierPage() {
               allowFullScreen
             />
           </div>
+          <div className="atelier-video-badge">Jaipur-born. India-wide.</div>
         </div>
       </section>
 
       <footer className="footer">
-        <div className="brand">SAANJH<span className="dot">·</span></div>
-        <p>Bespoke Wedding Atelier · Jaipur · Estd. 2014</p>
+        <div className="brand">SAANJH<span className="dot">&middot;</span></div>
+        <p>Bespoke Wedding Atelier &middot; Jaipur &middot; Estd. 2014</p>
         <div className="socials">
           <a href="https://instagram.com">INSTAGRAM</a>
           <a href="#">YOUTUBE</a>

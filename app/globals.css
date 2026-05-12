@@ -337,6 +337,29 @@ body {
   display:grid; grid-template-columns:1fr 1fr; gap:5rem;
   align-items:center;
 }
+.atelier-about {
+  position:relative;
+  min-height:100svh;
+  overflow:hidden;
+}
+.atelier-about::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(110deg, rgba(163,85,105,0.12), transparent 36%),
+    linear-gradient(290deg, rgba(201,163,102,0.08), transparent 42%);
+  pointer-events:none;
+}
+.atelier-about > * {
+  position:relative;
+  z-index:1;
+}
+.atelier-copy { max-width:680px; }
+.atelier-mobile-actions,
+.atelier-video-badge {
+  display:none;
+}
 .about .eyebrow {
   font-family:'Cinzel',serif;
   font-size:0.6rem; letter-spacing:0.55em;
@@ -390,6 +413,7 @@ body {
   width:100%;
   height:100%;
   border:0;
+  pointer-events:none;
 }
 .about-image::after {
   content:''; position:absolute; inset:0;
@@ -400,6 +424,180 @@ body {
   .about { grid-template-columns:1fr; padding:5rem 1.5rem; gap:3rem; }
   .stats { gap:1rem; }
   .about-image { min-height:240px; }
+  .atelier-about {
+    display:flex;
+    flex-direction:column;
+    gap:1.45rem;
+    min-height:auto;
+    padding:5.85rem 1.15rem 3.35rem;
+    background:
+      linear-gradient(180deg, rgba(10,8,7,0.06) 0%, var(--deep-2) 42%, var(--deep) 100%),
+      linear-gradient(135deg, rgba(163,85,105,0.22), transparent 46%),
+      var(--deep-2);
+  }
+  .atelier-about::before {
+    background:
+      linear-gradient(90deg, transparent, rgba(201,163,102,0.12), transparent),
+      repeating-linear-gradient(90deg, rgba(244,234,213,0.04) 0 1px, transparent 1px 72px);
+  }
+  .atelier-about .about-image {
+    order:-1;
+    width:100%;
+    aspect-ratio:16/10;
+    min-height:0;
+    margin:0 0 0.35rem;
+    border-radius:0;
+    box-shadow:0 24px 60px rgba(0,0,0,0.38);
+  }
+  .atelier-about .about-image::after {
+    margin:0.7rem;
+    border-color:rgba(226,201,138,0.78);
+  }
+  .atelier-video-badge {
+    display:block;
+    position:absolute;
+    left:1rem;
+    right:1rem;
+    bottom:1rem;
+    z-index:2;
+    padding:0.72rem 0.8rem;
+    background:rgba(244,234,213,0.9);
+    color:var(--deep);
+    font-family:'Cinzel',serif;
+    font-size:0.54rem;
+    letter-spacing:0.28em;
+    line-height:1.35;
+    text-align:center;
+    text-transform:uppercase;
+    backdrop-filter:blur(8px);
+  }
+  .atelier-copy {
+    max-width:none;
+  }
+  .atelier-copy .eyebrow {
+    font-size:0.54rem;
+    letter-spacing:0.42em;
+    margin-bottom:0.85rem;
+  }
+  .atelier-copy h2 {
+    font-size:clamp(2.15rem, 13vw, 3.35rem);
+    line-height:1;
+    margin-bottom:1rem;
+  }
+  .atelier-copy h2 br {
+    display:none;
+  }
+  .atelier-copy p {
+    font-size:1.02rem;
+    line-height:1.62;
+    margin-bottom:0.8rem;
+    opacity:0.82;
+  }
+  .atelier-copy p:first-of-type {
+    font-size:1.12rem;
+    opacity:0.94;
+  }
+  .atelier-mobile-actions {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0.75rem;
+    margin:1.25rem 0 1.35rem;
+  }
+  .atelier-action {
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(226,201,138,0.42);
+    color:var(--gold-soft);
+    font-family:'Cinzel',serif;
+    font-size:0.62rem;
+    letter-spacing:0.22em;
+    text-align:center;
+    text-decoration:none;
+    text-transform:uppercase;
+    transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+  .atelier-action.primary {
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--deep);
+  }
+  .atelier-action.secondary {
+    background:rgba(255,255,255,0.035);
+  }
+  .atelier-action:focus-visible {
+    outline:2px solid var(--gold-soft);
+    outline-offset:3px;
+  }
+  .atelier-about .stats {
+    grid-template-columns:1fr;
+    gap:0.75rem;
+    padding-top:0;
+    border-top:0;
+    margin-top:0.4rem;
+  }
+  .atelier-about .stat {
+    min-height:72px;
+    display:grid;
+    grid-template-columns:minmax(5.5rem, auto) 1fr;
+    align-items:center;
+    gap:1rem;
+    padding:1rem;
+    border:1px solid rgba(201,163,102,0.24);
+    background:linear-gradient(135deg, rgba(255,255,255,0.045), rgba(163,85,105,0.08));
+  }
+  .atelier-about .stat .n {
+    font-size:clamp(2rem, 12vw, 2.65rem);
+  }
+  .atelier-about .stat .l {
+    font-size:0.52rem;
+    letter-spacing:0.26em;
+    line-height:1.45;
+    margin-top:0;
+  }
+  .standalone-page .footer {
+    padding:2.5rem 1rem;
+  }
+  .standalone-page .footer .brand {
+    font-size:0.9rem;
+    letter-spacing:0.32em;
+  }
+  .standalone-page .footer p {
+    max-width:18rem;
+    margin:0 auto;
+    line-height:1.6;
+  }
+  .standalone-page .socials {
+    flex-wrap:wrap;
+    gap:0.85rem 1.1rem;
+  }
+  .standalone-page .socials a {
+    letter-spacing:0.28em;
+  }
+}
+@media (max-width:420px) {
+  .atelier-about {
+    padding-left:1rem;
+    padding-right:1rem;
+  }
+  .atelier-copy h2 {
+    font-size:2.42rem;
+  }
+  .atelier-mobile-actions {
+    grid-template-columns:1fr;
+  }
+  .atelier-action {
+    min-height:46px;
+  }
+  .atelier-about .stat {
+    grid-template-columns:1fr;
+    gap:0.35rem;
+  }
+  .atelier-video-badge {
+    font-size:0.48rem;
+    letter-spacing:0.22em;
+  }
 }
 
 /* ===== SERVICES STRIP ===== */
