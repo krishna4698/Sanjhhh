@@ -121,7 +121,7 @@ export default function AtelierPage() {
         </div>
 
         <div className="about-image">
-          <img src="/images/hero-ornate.jpg" alt="Atelier Work" />
+          <img src="/images/portfolio-ornate-night.png" alt="Atelier Work" />
         </div>
       </section>
 
