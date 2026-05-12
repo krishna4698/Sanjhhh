@@ -22,10 +22,22 @@ export default function Home() {
 
     const cleanupMobileNav = setupMobileNav(nav);
     const layers = [1, 2, 3, 4, 5].map((i) => document.getElementById("L" + i));
+    const layerImages = layers.map((layer) => layer?.querySelector("img"));
     const caps = [1, 2, 3, 4, 5].map((i) => document.getElementById("c" + i));
     const galSlides = document.querySelectorAll(".gal-slide");
     const galDots = document.querySelectorAll("#galDots span");
+    const galleryImages = document.querySelectorAll(".gal-slide img");
+    const motionImages = Array.from(new Set([...layerImages, ...galleryImages].filter(Boolean)));
     const totalSlides = galSlides.length;
+    let heroScrollRange = 0;
+    let galleryScrollRange = 0;
+    let activeGalleryIndex = -1;
+    let navIsScrolled = false;
+    let rafId = 0;
+    let resizeRafId = 0;
+    let preloadHandle = 0;
+    let isPreloadIdle = false;
+    let shouldStopPreloading = false;
 
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     const remap = (value, inMin, inMax, outMin, outMax) => (
@@ -44,13 +56,48 @@ export default function Home() {
       [0.78, 1.00, 3],
     ];
 
+    motionImages.forEach((img, index) => {
+      img.decoding = "async";
+      if ("fetchPriority" in img) {
+        img.fetchPriority = index === 0 ? "high" : "auto";
+      }
+    });
+
+    function scheduleImagePreload(callback, delay = 0) {
+      if ("requestIdleCallback" in window) {
+        isPreloadIdle = true;
+        preloadHandle = window.requestIdleCallback(callback, { timeout: 1200 });
+        return;
+      }
+
+      isPreloadIdle = false;
+      preloadHandle = window.setTimeout(callback, delay || 120);
+    }
+
+    function warmNextImage() {
+      if (shouldStopPreloading || motionImages.length === 0) return;
+
+      const img = motionImages.shift();
+      const decode = img?.decode ? img.decode() : Promise.resolve();
+
+      decode
+        .catch(() => {})
+        .finally(() => {
+          if (!shouldStopPreloading) scheduleImagePreload(warmNextImage);
+        });
+    }
+
+    function measureScrollRanges() {
+      heroScrollRange = Math.max(heroWrap.offsetHeight - window.innerHeight, 0);
+      galleryScrollRange = Math.max(galleryWrap.offsetHeight - window.innerHeight, 0);
+    }
+
     function updateHero() {
       const rect = heroWrap.getBoundingClientRect();
-      const total = heroWrap.offsetHeight - window.innerHeight;
-      if (total <= 0) return;
+      if (heroScrollRange <= 0) return;
 
-      const p = clamp(-rect.top / total, 0, 1);
-      progress.style.width = (p * 100) + "%";
+      const p = clamp(-rect.top / heroScrollRange, 0, 1);
+      progress.style.transform = "scaleX(" + p.toFixed(4) + ")";
       heroMark.style.opacity = remap(p, 0, 0.04, 1, 0);
       scrollCue.style.opacity = remap(p, 0, 0.04, 0.7, 0);
 
@@ -60,8 +107,8 @@ export default function Home() {
         const [start, end, maxScale] = segments[index];
         const localP = clamp((p - start) / (end - start), 0, 1);
         const scale = Math.pow(maxScale, localP);
-        const img = layer.querySelector("img");
-        if (img) img.style.transform = "scale(" + scale.toFixed(3) + ")";
+        const img = layerImages[index];
+        if (img) img.style.transform = "translate3d(0,0,0) scale(" + scale.toFixed(3) + ")";
 
         let opacity;
         if (index === 0) opacity = remap(p, end - 0.04, end, 1, 0);
@@ -80,36 +127,66 @@ export default function Home() {
 
     function updateGallery() {
       const rect = galleryWrap.getBoundingClientRect();
-      const total = galleryWrap.offsetHeight - window.innerHeight;
-      if (total <= 0 || totalSlides === 0) return;
+      if (galleryScrollRange <= 0 || totalSlides === 0) return;
 
-      const p = clamp(-rect.top / total, 0, 1);
+      const p = clamp(-rect.top / galleryScrollRange, 0, 1);
       const idx = clamp(Math.floor(p * totalSlides), 0, totalSlides - 1);
+      if (idx === activeGalleryIndex) return;
 
       galSlides.forEach((slide, index) => slide.classList.toggle("active", index === idx));
       galDots.forEach((dot, index) => dot.classList.toggle("on", index === idx));
       gNum.textContent = String(idx + 1).padStart(2, "0");
+      activeGalleryIndex = idx;
     }
 
     function updateNav() {
-      nav.classList.toggle("scrolled", window.scrollY > 80);
+      const nextScrolled = window.scrollY > 80;
+      if (nextScrolled === navIsScrolled) return;
+
+      nav.classList.toggle("scrolled", nextScrolled);
+      navIsScrolled = nextScrolled;
     }
 
-    function onScroll() {
+    function updatePage() {
+      rafId = 0;
       updateHero();
       updateGallery();
       updateNav();
     }
 
+    function requestPageUpdate() {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(updatePage);
+    }
+
+    function onResize() {
+      if (resizeRafId) return;
+
+      resizeRafId = window.requestAnimationFrame(() => {
+        resizeRafId = 0;
+        measureScrollRanges();
+        requestPageUpdate();
+      });
+    }
+
     gTotal.textContent = String(totalSlides).padStart(2, "0");
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
+    measureScrollRanges();
+    window.addEventListener("scroll", requestPageUpdate, { passive: true });
+    window.addEventListener("resize", onResize);
+    requestPageUpdate();
+    scheduleImagePreload(warmNextImage, 300);
 
     return () => {
+      shouldStopPreloading = true;
+      if (preloadHandle) {
+        if (isPreloadIdle && "cancelIdleCallback" in window) window.cancelIdleCallback(preloadHandle);
+        else window.clearTimeout(preloadHandle);
+      }
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (resizeRafId) window.cancelAnimationFrame(resizeRafId);
       cleanupMobileNav();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", requestPageUpdate);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
