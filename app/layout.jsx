@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'SAANJH - Bespoke Wedding Atelier',
+  title: 'ElysianEventsByNick - Bespoke Wedding Atelier',
   description: 'Bespoke wedding design atelier for mandaps, florals, ambience, and destination celebrations.',
 };
 

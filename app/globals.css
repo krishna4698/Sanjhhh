@@ -35,11 +35,13 @@ body {
   display:inline-flex;
   align-items:center;
   font-family:'Cinzel',serif;
-  font-size:1.1rem; letter-spacing:0.55em;
+  font-size:1rem; letter-spacing:0;
   color:var(--cream); font-weight:500;
   text-decoration:none;
   position:relative;
   z-index:2;
+  max-width:min(32rem, 50vw);
+  white-space:nowrap;
 }
 .brand .dot { color:var(--gold); }
 .nav-links {
@@ -48,7 +50,7 @@ body {
 .nav-links a {
   color:var(--cream);
   text-decoration:none;
-  font-size:0.7rem; letter-spacing:0.3em;
+  font-size:0.7rem; letter-spacing:0;
   text-transform:uppercase;
   opacity:0.8;
   transition:opacity 0.3s, color 0.3s;
@@ -82,8 +84,9 @@ body {
   }
   .nav.scrolled { padding:0.8rem 1.2rem; }
   .brand {
-    font-size:0.95rem;
-    letter-spacing:0.36em;
+    font-size:0.78rem;
+    letter-spacing:0;
+    max-width:calc(100vw - 5.5rem);
   }
   .nav-toggle { display:flex; }
   .nav-links {
@@ -110,7 +113,7 @@ body {
     display:block;
     padding:0.95rem 1rem;
     font-size:0.68rem;
-    letter-spacing:0.28em;
+    letter-spacing:0;
   }
   .nav.menu-open .nav-toggle span:nth-child(1) { transform:translateY(6px) rotate(45deg); }
   .nav.menu-open .nav-toggle span:nth-child(2) { opacity:0; }
@@ -157,6 +160,7 @@ body {
   transform:translate(-50%,-50%);
   z-index:80; text-align:center;
   pointer-events:none;
+  width:min(92vw, 70rem);
 }
 .hero-mark .eyebrow {
   font-family:'Cinzel',serif;
@@ -166,11 +170,23 @@ body {
 }
 .hero-mark h1 {
   font-family:'Cinzel',serif;
-  font-size:clamp(2.8rem, 7vw, 5.5rem);
-  font-weight:500; letter-spacing:0.25em;
+  font-size:4.4rem;
+  font-weight:500; letter-spacing:0;
+  line-height:1;
   color:var(--cream);
   text-shadow:0 4px 40px rgba(0,0,0,0.9);
   margin-bottom:1rem;
+  overflow-wrap:anywhere;
+}
+@media (max-width:768px) {
+  .hero-mark h1 {
+    font-size:2.3rem;
+  }
+}
+@media (max-width:420px) {
+  .hero-mark h1 {
+    font-size:1.85rem;
+  }
 }
 .hero-mark .tagline {
   font-family:'Cormorant Garamond',serif;
@@ -568,7 +584,7 @@ body {
   }
   .standalone-page .footer .brand {
     font-size:0.9rem;
-    letter-spacing:0.32em;
+    letter-spacing:0;
   }
   .standalone-page .footer p {
     max-width:18rem;
@@ -681,7 +697,11 @@ body {
   font-weight:300; line-height:1.1;
   margin-bottom:1.4rem;
 }
-.contact-info h2 em { font-style:italic; color:var(--gold-soft); }
+.contact-info h2 em {
+  font-style:italic;
+  color:var(--gold-soft);
+  overflow-wrap:anywhere;
+}
 .contact-info > p {
   font-family:'Cormorant Garamond',serif;
   font-size:1.1rem; line-height:1.7;
@@ -706,6 +726,7 @@ body {
 .contact-detail .val {
   font-family:'Cormorant Garamond',serif;
   font-size:1.05rem; color:var(--cream);
+  overflow-wrap:anywhere;
 }
 
 /* Form */

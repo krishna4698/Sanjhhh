@@ -81,8 +81,8 @@ export default function AtelierPage() {
       <div className="progress" id="progress"></div>
 
       <nav className="nav" id="nav">
-        <a className="brand" href="/" aria-label="SAANJH home">
-          SAANJH<span className="dot">&middot;</span>
+        <a className="brand" href="/" aria-label="ElysianEventsByNick home">
+          ElysianEventsByNick<span className="dot">&middot;</span>
         </a>
         <button
           className="nav-toggle"
@@ -107,7 +107,7 @@ export default function AtelierPage() {
         <div className="atelier-copy">
           <p className="eyebrow">THE ATELIER</p>
           <h2>A decade of <em>crafted</em><br />celebrations.</h2>
-          <p>SAANJH is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns - every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
+          <p>ElysianEventsByNick is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns - every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
           <p>From beachside ceremonies in Goa to royal weddings in Rajasthan, we have designed over 450 weddings for couples who believe their day should feel like nothing they have ever seen before.</p>
 
           <div className="atelier-mobile-actions" aria-label="Atelier actions">
@@ -141,7 +141,7 @@ export default function AtelierPage() {
       </section>
 
       <footer className="footer">
-        <div className="brand">SAANJH<span className="dot">&middot;</span></div>
+        <div className="brand">ElysianEventsByNick<span className="dot">&middot;</span></div>
         <p>Bespoke Wedding Atelier &middot; Jaipur &middot; Estd. 2014</p>
         <div className="socials">
           <a href="https://instagram.com">INSTAGRAM</a>
