@@ -107,8 +107,10 @@ export default function AtelierPage() {
         <div className="atelier-copy">
           <p className="eyebrow">THE ATELIER</p>
           <h2>A decade of <em>crafted</em><br />celebrations.</h2>
-          <p>ElysianEventsByNick is a full-service wedding design atelier born in the gardens of Jaipur. We build mandaps the way couture houses build gowns - every petal stitched in by hand, every drape considered, every chandelier chosen for the story it tells.</p>
-          <p>From beachside ceremonies in Goa to royal weddings in Rajasthan, we have designed over 450 weddings for couples who believe their day should feel like nothing they have ever seen before.</p>
+          <p>At ElysianEventsByNick, decor is more than decoration — it’s about creating unforgettable experiences ❤️
+With expertise in stylish event planning and aesthetic setups, the brand has worked across various celebration themes, delivering elegant and visually stunning events tailored to every client’s vision.
+.</p>
+          <p>From floral elegance to modern luxury setups, every project reflects creativity, perfection, and passion. Whether it’s a wedding, reception, baby shower, birthday, or corporate gathering, the team ensures a seamless and memorable atmosphere for every occasion ✨.</p>
 
           <div className="atelier-mobile-actions" aria-label="Atelier actions">
             <a className="atelier-action primary" href="/#gallery">View Work</a>
